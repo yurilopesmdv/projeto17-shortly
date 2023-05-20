@@ -6,7 +6,7 @@ export async function tokenValidate(req, res, next) {
     if(!token) return res.sendStatus(401)
     try {
         const session = await isLogged(token)
-        if(!session.rowCount) return res.sendStatus(401)
+        if(!session) return res.sendStatus(401)
         res.locals.session = session.rows[0]
         next()
     }catch (err) {

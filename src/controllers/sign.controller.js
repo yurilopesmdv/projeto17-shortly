@@ -30,7 +30,8 @@ export async function signIn(req, res) {
             return res.sendStatus(401)
         }
         const token = uuid()
-        await signInQuery(token)
+        const userId = user.rows[0].id
+        await signInQuery(userId, token)
         res.status(200).send(token)
     }catch(err) {
         res.status(500).send(err.message)

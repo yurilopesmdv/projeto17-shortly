@@ -10,8 +10,8 @@ export async function signUpQuery(name, email, hash) {
     return response
 }
 
-export async function signInQuery(token) {
-    const response = await db.query(`INSERT INTO sessions (token) VALUES ($1);`, [token])
+export async function signInQuery(userId, token) {
+    const response = await db.query(`INSERT INTO sessions ("userId", token) VALUES ($1, $2);`, [userId, token])
     return response
 }
 
