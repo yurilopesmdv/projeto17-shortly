@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { deleteUrlQuery, getUrlByIdQuery, getUrlQuery, postUrlQuery, updateVisitQuery, urlFromUser } from "../repositories/urls.repository.js"
+import { deleteUrlQuery, getUrlByIdQuery, getUrlQuery, postUrlQuery, postVisit, updateVisitQuery, urlFromUser } from "../repositories/urls.repository.js"
 
 export async function postUrl(req, res) {
     const {url} = req.body
@@ -9,8 +9,9 @@ export async function postUrl(req, res) {
     try {
         await postUrlQuery(url, userId, shortUrl)
         const crUrl = await getUrlQuery(shortUrl)
-        const urlId = crUrl.rows[0].id
-        res.status(201).send({urlId, shortUrl})
+        const shortId = crUrl.rows[0].id
+        await postVisit(shortId)
+        res.status(201).send({id: shortId, shortUrl})
     } catch(err) {
         res.status(500).send(err.message)
     }
