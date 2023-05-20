@@ -1,17 +1,25 @@
-import { deleteUrlQuery, getUrlByIdQuery, urlFromUser } from "../repositories/urls.repository.js"
+import { nanoid } from "nanoid"
+import { deleteUrlQuery, getUrlByIdQuery, getUrlQuery, postUrlQuery, urlFromUser } from "../repositories/urls.repository.js"
 
 export async function postUrl(req, res) {
     const {url} = req.body
-    const {userId} = res.locals.session
+    const session = res.locals.session
+    const userId = session.userId
+    const shortUrl = nanoid()
     try {
-
+        await postUrlQuery(url, userId, shortUrl)
+        const crUrl = await getUrlQuery(shortUrl)
+        const urlId = crUrl.rows[0].id
+        res.status(201).send({urlId, shortUrl})
     } catch(err) {
         res.status(500).send(err.message)
     }
 }
 
 export async function getUrlById(req, res) {
+    const id = req.params.id
     try {
+        
 
     } catch(err) {
         res.status(500).send(err.message)

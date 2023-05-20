@@ -8,7 +8,7 @@ export async function postUrlQuery(url, shortUrl, userId) {
 }
 
 export async function getUrlQuery(shortUrl) {
-    const response = await db.query()
+    const response = await db.query(`SELECT * FROM shorts WHERE "shortUrl"=$1;`, [shortUrl])
     return response
 }
 
