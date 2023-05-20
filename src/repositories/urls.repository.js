@@ -26,3 +26,18 @@ export async function urlFromUser(userId, id) {
     const response = await db.query(`SELECT * FROM shorts WHERE "userId"=$1 AND id=$2;`, [userId, id])
     return response
 }
+
+export async function updateVisitQuery(updtVisit, shortId) {
+    const response = await db.query(`UPDATE visits SET visit=$1 WHERE "shortUrl"=$2;`, [updtVisit, shortId])
+    return response
+}
+
+export async function getVisit(shortId) {
+    const response = await db.query(`SELECT * FROM visits WHERE "shortId"=$1;`, [shortId])
+    return response
+}
+
+export async function postVisit(shortId) {
+    const response = await db.query(`INSERT INTO visits ("shortId") VALUES ($1);`, [shortId])
+    return response
+}
