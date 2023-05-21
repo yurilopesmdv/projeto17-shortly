@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { deleteUrlQuery, getUrlByIdQuery, getUrlQuery, postUrlQuery, postVisit, updateVisitQuery, urlFromUser } from "../repositories/urls.repository.js"
+import { deleteUrlQuery, getUrlByIdQuery, getUrlQuery, postUrlQuery, updateViews, urlFromUser } from "../repositories/urls.repository.js"
 
 export async function postUrl(req, res) {
     const {url} = req.body
@@ -20,9 +20,14 @@ export async function postUrl(req, res) {
 export async function getUrlById(req, res) {
     const { id } = req.params
     try {
-        const url = await getUrlByIdQuery(id)
-        if(!url) return res.sendStatus(404)
-        res.status(200).send(url.rows[0])
+        const {rows} = await getUrlByIdQuery(id)
+        if(rows.length === 0) return res.sendStatus(404)
+        const [url] = rows
+
+        delete url.userId
+        delete url.createdAt
+        delete url.views
+        res.status(200).send(url)
     } catch(err) {
         res.status(500).send(err.message)
     }
@@ -31,12 +36,11 @@ export async function getUrlById(req, res) {
 export async function getShort(req, res) {
     const { shortUrl } = req.params
     try {
-        const short = await getUrlQuery(shortUrl)
-        if(!short.rowCount) return res.sendStatus(404)
-        const shortId = short.rows[0].id
-        const visits = await getVisit(shortId)
-        const updtVisit = visits.rows[0].visit + 1
-        await updateVisitQuery(updtVisit, shortId)
+        const {rows} = await getUrlQuery(shortUrl)
+        if(rows.length === 0) return res.sendStatus(404)
+        const [url] = rows
+        await updateViews(url.id)
+        res.redirect(url.url)
     } catch(err) {
         res.status(500).send(err.message)
     }
@@ -46,12 +50,13 @@ export async function deleteUrl(req, res) {
     const {id} = req.params
     const {userId} = res.locals.session
     try {
-        const urlIsFromUser = await urlFromUser(userId, id)
-        if(!urlIsFromUser) return res.sendStatus(401)
-        const urlExists = await getUrlByIdQuery(id)
-        if(!urlExists) return res.sendStatus(404)
+        const result = await getUrlById(id)
+        if(result.rowCount === 0) return res.sendStatus(404)
+        const [url] = result.rows
+        if(url.userId !== userId) return res.sendStatus(401)
 
         await deleteUrlQuery(id)
+        res.sendStatus(204)
     } catch(err) {
         res.status(500).send(err.message)
     }

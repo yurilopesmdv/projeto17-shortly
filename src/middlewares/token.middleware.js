@@ -5,9 +5,10 @@ export async function tokenValidate(req, res, next) {
     const token = authorization?.replace("Bearer ", "");
     if(!token) return res.sendStatus(401)
     try {
-        const session = await isLogged(token)
+        const {rows: sessions} = await isLogged(token)
+        const [session] = sessions
         if(!session) return res.sendStatus(401)
-        res.locals.session = session.rows[0]
+        res.locals.session = session
         next()
     }catch (err) {
     res.status(500).send(err.message);

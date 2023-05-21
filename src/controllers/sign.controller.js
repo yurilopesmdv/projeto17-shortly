@@ -5,8 +5,7 @@ import {v4 as uuid} from "uuid"
 
 
 export async function signUp(req, res) {
-    const {name, email, password, confirmPassword} = req.body
-    if(password !== confirmPassword) return res.status(422).send('Os campos password e confirmPassword devem ser iguais.')
+    const {name, email, password} = req.body
     try {
         const emailExists = await checkEmail(email)
         if(emailExists.rowCount > 0) return res.sendStatus(409)

@@ -2,12 +2,15 @@ import { db } from "../connection/database.connection.js"
 
 export async function rankQuery() {
     const response = await db.query(`
-        SELECT users.id, users.name, COUNT(*) as "linksCount", SUM(visits.visit) AS "visitCount"
-            FROM shorts
-            LEFT JOIN users ON users.id = shorts."userId"
-            LEFT JOIN visits ON visits."shortId" = shorts.id
-            GROUP BY users.id
+        SELECT u.id,
+                 u.name,
+                COUNT(s.id) AS "linksCount", 
+                COALESCE(SUM(s.views), 0) AS "visitCount"
+            FROM users u
+            LEFT JOIN shortens s ON s."user.id" = u.id
+            GROUP BY u.id
             ORDER BY "visitCount" DESC
             LIMIT 10;
-    `)
+    ;`)
+    return response
 }

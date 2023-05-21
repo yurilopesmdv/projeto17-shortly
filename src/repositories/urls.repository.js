@@ -27,17 +27,7 @@ export async function urlFromUser(userId, id) {
     return response
 }
 
-export async function updateVisitQuery(updtVisit, shortId) {
-    const response = await db.query(`UPDATE visits SET visit=$1 WHERE "shortUrl"=$2;`, [updtVisit, shortId])
-    return response
-}
-
-export async function getVisit(shortId) {
-    const response = await db.query(`SELECT * FROM visits WHERE "shortId"=$1;`, [shortId])
-    return response
-}
-
-export async function postVisit(shortId) {
-    const response = await db.query(`INSERT INTO visits ("shortId") VALUES ($1);`, [shortId])
+export async function updateViews(id) {
+    const response = await db.query(`UPDATE shorts SET views = views + 1 WHERE id =$1;`, [id])
     return response
 }
