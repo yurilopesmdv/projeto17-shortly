@@ -7,7 +7,7 @@ export async function rankQuery() {
                 COUNT(s.id) AS "linksCount", 
                 COALESCE(SUM(s.views), 0) AS "visitCount"
             FROM users u
-            LEFT JOIN shorts s ON s."user.id" = u.id
+            LEFT JOIN shorts s ON s."userId" = u.id
             GROUP BY u.id
             ORDER BY "visitCount" DESC
             LIMIT 10;
