@@ -59,9 +59,10 @@ ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
 CREATE TABLE public.shorts (
     id integer NOT NULL,
     url text NOT NULL,
-    shorturl text NOT NULL,
-    "userId" integer,
-    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
+    "shortUrl" text NOT NULL,
+    "userId" integer NOT NULL,
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL,
+    views integer DEFAULT 0 NOT NULL
 );
 
 
@@ -119,38 +120,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: visits; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.visits (
-    id integer NOT NULL,
-    "shortId" integer,
-    visit integer DEFAULT 1 NOT NULL,
-    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: visits_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.visits_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: visits_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.visits_id_seq OWNED BY public.visits.id;
-
-
---
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -172,13 +141,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: visits id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.visits ALTER COLUMN id SET DEFAULT nextval('public.visits_id_seq'::regclass);
-
-
---
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -192,12 +154,6 @@ ALTER TABLE ONLY public.visits ALTER COLUMN id SET DEFAULT nextval('public.visit
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-
-
---
--- Data for Name: visits; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 
@@ -221,13 +177,6 @@ SELECT pg_catalog.setval('public.shorts_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.users_id_seq', 1, false);
-
-
---
--- Name: visits_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.visits_id_seq', 1, false);
 
 
 --
@@ -255,14 +204,6 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: visits visits_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.visits
-    ADD CONSTRAINT visits_pkey PRIMARY KEY (id);
-
-
---
 -- Name: sessions sessions_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -276,14 +217,6 @@ ALTER TABLE ONLY public.sessions
 
 ALTER TABLE ONLY public.shorts
     ADD CONSTRAINT "shorts_userId_fkey" FOREIGN KEY ("userId") REFERENCES public.users(id);
-
-
---
--- Name: visits visits_shortId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.visits
-    ADD CONSTRAINT "visits_shortId_fkey" FOREIGN KEY ("shortId") REFERENCES public.shorts(id);
 
 
 --
