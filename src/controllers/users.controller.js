@@ -1,4 +1,4 @@
-import { getUrlsUser, getUserById, visitCountQuery } from "../repositories/users.repository";
+import { getUrlsUser, getUserById, visitCountQuery } from "../repositories/users.repository.js";
 
 export async function getUser(req, res) {
     const session = res.locals.session

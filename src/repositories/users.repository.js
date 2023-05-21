@@ -1,4 +1,4 @@
-import { db } from "../connection/database.connection"
+import { db } from "../connection/database.connection.js"
 
 export function visitCountQuery(userId) {
     const response = db.query(`
