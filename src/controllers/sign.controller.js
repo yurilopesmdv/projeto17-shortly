@@ -1,4 +1,3 @@
-import {db} from "../connection/database.connection.js"
 import { checkEmail, signInQuery, signUpQuery } from "../repositories/sign.repository.js"
 import bcrypt from "bcrypt"
 import {v4 as uuid} from "uuid"
@@ -31,7 +30,7 @@ export async function signIn(req, res) {
         const token = uuid()
         const userId = user.rows[0].id
         await signInQuery(userId, token)
-        res.status(200).send(token)
+        res.status(200).send({token})
     }catch(err) {
         res.status(500).send(err.message)
     }
