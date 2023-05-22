@@ -46,11 +46,11 @@ export async function getShort(req, res) {
 
 export async function deleteUrl(req, res) {
     const {id} = req.params
-    const {userId} = res.locals.session
+    const { userId } = res.locals.session
     try {
-        const result = await getUrlById(id)
+        const result = await getUrlByIdQuery(id)
         if(result.rowCount === 0) return res.sendStatus(404)
-        const [url] = result.rows
+        const url = result.rows[0]
         if(url.userId !== userId) return res.sendStatus(401)
 
         await deleteUrlQuery(id)

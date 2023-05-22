@@ -9,6 +9,6 @@ const urlsRouter = Router()
 urlsRouter.post("/urls/shorten", validateSchema(urlSchema) ,tokenValidate, postUrl)
 urlsRouter.get("/urls/:id", getUrlById)
 urlsRouter.get("/urls/open/:shortUrl", getShort)
-urlsRouter.delete("/urls/:id",tokenValidate, deleteUrl)
+urlsRouter.delete("/urls/:id", tokenValidate, deleteUrl)
 
 export default urlsRouter
