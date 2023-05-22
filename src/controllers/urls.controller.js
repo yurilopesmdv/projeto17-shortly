@@ -7,9 +7,9 @@ export async function postUrl(req, res) {
     const shortUrl = nanoid(8)
     try {
         await postUrlQuery(url, shortUrl, userId)
-        const createdUrl = await getUrlQuery(shortUrl)
-        console.log(createdUrl)
-        res.status(201).send({id: createdUrl.rows[0].shortId, shortUrl: shortUrl})
+        const {rows} = await getUrlQuery(shortUrl)
+        console.log(rows)
+        res.status(201).send({id: rows[0].id, shortUrl: shortUrl})
     } catch(err) {
         res.status(500).send(err.message)
     }
