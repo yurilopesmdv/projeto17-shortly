@@ -23,10 +23,10 @@ export async function signIn(req, res) {
     const {email, password} = req.body
     try {
         const user = await checkEmail(email)
-        const passwordIsValid = bcrypt.compareSync(password, user.rows[0].password)
-        if(user.rowCount === 0 || !passwordIsValid) {
-            return res.sendStatus(401)
-        }
+        
+        if(user.rowCount === 0) return res.sendStatus(401)
+        const passwordIsValid = bcrypt.compareSync(password, user.rows[0]?.password)
+        if(!passwordIsValid) return res.sendStatus(401)
         const token = uuid()
         const userId = user.rows[0].id
         await signInQuery(userId, token)
