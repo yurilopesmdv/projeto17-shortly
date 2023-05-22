@@ -7,6 +7,11 @@ export const signUpSchema = Joi.object({
     confirmPassword: Joi.ref("password"),
 })
 
+export const loginSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(3).required(),
+})
+
 export const urlSchema = Joi.object({
     url: Joi.string().uri().required()
 })
