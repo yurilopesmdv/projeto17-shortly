@@ -17,4 +17,5 @@ export async function signInQuery(userId, token) {
 
 export async function isLogged(token) {
     const response = await db.query(`SELECT * FROM sessions WHERE token=$1;`,  [token])
+    return response
 }

@@ -3,15 +3,13 @@ import { deleteUrlQuery, getUrlByIdQuery, getUrlQuery, postUrlQuery, updateViews
 
 export async function postUrl(req, res) {
     const {url} = req.body
-    const session = res.locals.session
-    const userId = session.userId
-    const shortUrl = nanoid()
+    const {userId} = res.locals.session
+    const shortUrl = nanoid(8)
     try {
-        await postUrlQuery(url, userId, shortUrl)
-        const crUrl = await getUrlQuery(shortUrl)
-        const shortId = crUrl.rows[0].id
-        await postVisit(shortId)
-        res.status(201).send({id: shortId, shortUrl})
+        await postUrlQuery(url, shortUrl, userId)
+        const createdUrl = await getUrlQuery(shortUrl)
+        console.log(createdUrl)
+        res.status(201).send({id: createdUrl.rows[0].shortId, shortUrl: shortUrl})
     } catch(err) {
         res.status(500).send(err.message)
     }
